@@ -1,0 +1,12 @@
+node_modules
+backend/node_modules
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.env
+.git
+*.log
+*.exe
