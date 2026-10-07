@@ -4,7 +4,7 @@
   "description": "ProteinTrack Full-Stack Bio-Nutritional Platform & Backend API",
   "main": "backend/src/server.js",
   "engines": {
-    "node": "20.x"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "start": "node backend/src/server.js",
