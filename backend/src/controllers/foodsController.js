@@ -32,10 +32,21 @@ async function getFoods(req, res, next) {
       params.push(`%${search.trim()}%`);
     }
 
-    // Filter by category
+    // Filter by category (supports both raw DB categories and UI filter aliases)
     if (category && category.trim() && category !== 'all') {
-      conditions.push('f.category = ?');
-      params.push(category.trim());
+      const cat = category.trim().toLowerCase();
+      if (cat === 'vegetarian' || cat === 'plant-based') {
+        conditions.push("f.category IN ('dairy', 'eggs', 'legumes', 'grains', 'nuts', 'plant_protein', 'vegetarian', 'plant-based')");
+      } else if (cat === 'poultry' || cat === 'seafood') {
+        conditions.push("f.category IN ('meat', 'fish', 'poultry', 'seafood')");
+      } else if (cat === 'high-protein') {
+        conditions.push('((f.protein_g / NULLIF(f.serving_g, 0)) * 100) >= 20');
+      } else if (cat === 'low-cal') {
+        conditions.push('f.calories < 150');
+      } else {
+        conditions.push('f.category = ?');
+        params.push(cat);
+      }
     }
 
     // Include system foods (is_custom = 0) OR custom foods created by this athlete
@@ -67,6 +78,7 @@ async function getFoods(req, res, next) {
     `;
 
     const foods = await db.query(querySql, [...params, limitNum, offset]);
+    const totalPages = Math.ceil(total / limitNum);
 
     res.json({
       foods,
@@ -74,7 +86,8 @@ async function getFoods(req, res, next) {
         total,
         page: pageNum,
         limit: limitNum,
-        total_pages: Math.ceil(total / limitNum)
+        total_pages: totalPages,
+        totalPages
       }
     });
   } catch (err) {

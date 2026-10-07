@@ -321,151 +321,95 @@ async function initCalculatorScreen() {
 // ==========================================
 // SCREEN 3: FOODS DATABASE INTEGRATION
 // ==========================================
-let currentFoodsPage = 1;
-let currentCategory = 'all';
-let currentSearch = '';
-let currentSort = 'protein_g';
-let currentOrder = 'desc';
+function mapDbCategoryToUiCategory(dbCategory) {
+  const cat = (dbCategory || '').toLowerCase();
+  if (cat === 'meat' || cat === 'poultry') return 'poultry';
+  if (cat === 'fish' || cat === 'seafood') return 'seafood';
+  if (cat === 'dairy') return 'dairy';
+  if (cat === 'eggs' || cat === 'vegetarian') return 'vegetarian';
+  if (cat === 'legumes') return 'legumes';
+  if (cat === 'nuts') return 'nuts';
+  if (cat === 'plant_protein' || cat === 'grains' || cat === 'plant-based') return 'plant-based';
+  return cat || 'other';
+}
+
+function mapDbCategoryToIcon(dbCategory) {
+  const cat = (dbCategory || '').toLowerCase();
+  if (cat === 'meat' || cat === 'poultry') return 'drumstick';
+  if (cat === 'fish' || cat === 'seafood') return 'fish';
+  if (cat === 'dairy') return 'milk';
+  if (cat === 'eggs') return 'egg';
+  if (cat === 'legumes') return 'bean';
+  if (cat === 'nuts') return 'nut';
+  if (cat === 'grains') return 'wheat';
+  if (cat === 'plant_protein') return 'leaf';
+  return 'Flame';
+}
 
 async function initFoodsScreen() {
-  const tableBody = document.getElementById('food-table-body');
-  const searchInput = document.getElementById('food-search-input');
-  const countBadge = document.getElementById('food-count-badge');
-
-  async function loadFoods() {
-    if (!tableBody) return;
-    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400">Loading bio-verified nutrition database...</td></tr>`;
-
-    try {
-      const params = {
-        page: currentFoodsPage,
-        limit: 15,
-        sort: currentSort,
-        order: currentOrder
-      };
-      if (currentSearch) params.search = currentSearch;
-      if (currentCategory && currentCategory !== 'all') params.category = currentCategory;
-
-      const data = await API.foods.list(params);
-      const foods = data.foods;
-      const pagination = data.pagination;
-
-      if (countBadge) countBadge.textContent = `${pagination.total} VERIFIED ITEMS`;
-
-      if (!foods || foods.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400">No matching food records found.</td></tr>`;
-        return;
-      }
-
-      tableBody.innerHTML = foods.map(food => {
-        const pct100 = Math.min(100, Math.round((food.protein_g / 40) * 100));
-        return `
-          <tr class="border-b border-slate-800/60 hover:bg-slate-800/40 transition-colors group">
-            <td class="py-4 px-4">
-              <div class="font-bold text-white text-xs sm:text-sm group-hover:text-cyan-400 transition-colors">${food.name}</div>
-              <div class="text-[11px] text-slate-400 font-mono">${food.serving_label} (${food.calories} kcal)</div>
-            </td>
-            <td class="py-4 px-3">
-              <span class="inline-block text-[10px] font-mono uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                ${food.category}
-              </span>
-            </td>
-            <td class="py-4 px-3 font-mono">
-              <div class="space-y-1 w-28">
-                <div class="flex justify-between text-[11px]">
-                  <span class="font-bold text-white">${food.protein_g}g</span>
-                  <span class="text-slate-500">${pct100}%</span>
-                </div>
-                <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div class="h-full bg-cyan-400" style="width: ${pct100}%"></div>
-                </div>
-              </div>
-            </td>
-            <td class="py-4 px-3 text-slate-300 font-sans text-xs">
-              ${food.serving_label}
-            </td>
-            <td class="py-4 px-3">
-              <span class="inline-block px-2.5 py-1 rounded-md bg-lime-400/10 text-lime-400 border border-lime-400/30 font-mono font-bold text-xs">
-                ${food.protein_g}g
-              </span>
-            </td>
-            <td class="py-4 px-4 text-right">
-              <button onclick="logFoodItem(${food.id}, '${food.name}')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-cyan-400 border border-slate-700 text-xs font-semibold transition-all">
-                + Add to Log
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      renderPaginationControls(pagination);
-    } catch (err) {
-      console.error('Failed to load foods:', err);
-      tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-rose-400">Failed to load foods catalog: ${err.message}</td></tr>`;
+  // Wrap logFromFood so clicking "+ Add to Log" also persists to the backend database when logged in
+  const originalLogFromFood = window.logFromFood;
+  window.logFromFood = async (foodName, grams, foodId) => {
+    if (typeof originalLogFromFood === 'function') {
+      originalLogFromFood(foodName, grams);
     }
-  }
-
-  function renderPaginationControls(pagination) {
-    const container = document.getElementById('food-pagination-container');
-    if (!container) return;
-
-    container.innerHTML = `
-      <div class="flex items-center justify-between py-4 text-xs font-mono text-slate-400">
-        <div>Showing Page ${pagination.page} of ${pagination.totalPages} (${pagination.total} total)</div>
-        <div class="flex items-center gap-2">
-          <button ${pagination.page <= 1 ? 'disabled' : ''} onclick="changeFoodPage(${pagination.page - 1})" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-white">Previous</button>
-          <button ${pagination.page >= pagination.totalPages ? 'disabled' : ''} onclick="changeFoodPage(${pagination.page + 1})" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-white">Next</button>
-        </div>
-      </div>
-    `;
-  }
-
-  window.changeFoodPage = (newPage) => {
-    currentFoodsPage = newPage;
-    loadFoods();
-  };
-
-  window.logFoodItem = async (foodId, foodName) => {
-    const mealType = prompt(`Add "${foodName}" to which meal?\n(breakfast / lunch / dinner / snack)`, 'lunch');
-    if (!mealType) return;
-
-    try {
-      await API.logs.create(foodId, mealType.toLowerCase().trim(), 1.0);
-      if (window.PT_APP && PT_APP.showToast) {
-        PT_APP.showToast(`Logged "${foodName}" to ${mealType}!`);
-      } else {
-        alert(`Logged "${foodName}" to ${mealType}!`);
+    const numericId = Number(foodId);
+    if (numericId && !Number.isNaN(numericId)) {
+      try {
+        await API.logs.create(numericId, 'lunch', 1.0);
+      } catch (e) {
+        // Guest user or offline: already saved in local state via originalLogFromFood
       }
-    } catch (err) {
-      alert(`Error logging food: ${err.message}`);
     }
   };
 
-  // Search input debouncer
-  let searchTimeout;
-  if (searchInput) {
-    searchInput.oninput = (e) => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        currentSearch = e.target.value.trim();
-        currentFoodsPage = 1;
-        loadFoods();
-      }, 300);
-    };
+  try {
+    const data = await API.foods.list({ limit: 100, sort: 'protein_g', order: 'desc' });
+    const foods = data && Array.isArray(data.foods) ? data.foods : [];
+    if (foods.length > 0 && typeof FOODS_DATA !== 'undefined' && Array.isArray(FOODS_DATA)) {
+      const mappedFoods = foods.map(f => {
+        const servingG = Number(f.serving_g) || 100;
+        const proteinG = Number(f.protein_g) || 0;
+        const calories = Number(f.calories) || 0;
+        const carbsG = Number(f.carbs_g) || 0;
+        const fatG = Number(f.fat_g) || 0;
+        const proteinPer100g = Number(f.protein_density_pct) || Number(((proteinG / servingG) * 100).toFixed(1));
+        const caloriesPer100g = Math.round((calories / servingG) * 100);
+
+        return {
+          id: String(f.id),
+          dbId: f.id,
+          name: f.name,
+          subtext: `${f.serving_label} · ${calories} kcal · ${carbsG}g C / ${fatG}g F`,
+          category: mapDbCategoryToUiCategory(f.category),
+          categoryLabel: (f.category || 'FOOD').replace('_', ' ').toUpperCase(),
+          proteinPer100g,
+          caloriesPer100g,
+          carbsPer100g: Number(((carbsG / servingG) * 100).toFixed(1)),
+          fatPer100g: Number(((fatG / servingG) * 100).toFixed(1)),
+          commonServing: f.serving_label,
+          servingWeightG: servingG,
+          proteinPerServe: proteinG,
+          caloriesPerServe: calories,
+          carbsPerServe: carbsG,
+          fatPerServe: fatG,
+          leucinePerServe: Number((proteinG * 0.088).toFixed(2)),
+          diaasScore: 1.05,
+          icon: mapDbCategoryToIcon(f.category)
+        };
+      });
+
+      FOODS_DATA.splice(0, FOODS_DATA.length, ...mappedFoods);
+      if (typeof window.renderDatabase === 'function') {
+        window.renderDatabase();
+      }
+    }
+  } catch (err) {
+    console.warn('Using built-in verified foods catalog fallback:', err.message);
+    if (typeof window.renderDatabase === 'function') {
+      window.renderDatabase();
+    }
   }
-
-  // Category filter tabs
-  document.querySelectorAll('[data-category-filter]').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('[data-category-filter]').forEach(b => b.classList.remove('active', 'bg-cyan-500', 'text-slate-950'));
-      btn.classList.add('active', 'bg-cyan-500', 'text-slate-950');
-      currentCategory = btn.getAttribute('data-category-filter');
-      currentFoodsPage = 1;
-      loadFoods();
-    };
-  });
-
-  loadFoods();
 }
 
 // ==========================================
