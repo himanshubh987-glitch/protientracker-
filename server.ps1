@@ -1,6 +1,7 @@
 $port = 8080
-$root = $PSScriptRoot
-if (-not $root) { $root = "c:\Users\HIMANSHU\Documents\protien" }
+$baseDir = $PSScriptRoot
+if (-not $baseDir) { $baseDir = "c:\Users\HIMANSHU\Documents\protien" }
+$root = [System.IO.Path]::Combine($baseDir, "frontend")
 
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://localhost:$port/")

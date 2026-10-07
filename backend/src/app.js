@@ -81,8 +81,8 @@ app.use('/api/newsletter', newsletterRoutes);
 // Explicit route alias: POST /api/logs/supplement
 app.post('/api/logs/supplement', authenticate, supplementsController.logSupplement);
 
-// 6. Optionally serve static frontend files if present in parent directory
-const frontendPath = path.resolve(__dirname, '../../');
+// 6. Optionally serve static frontend files from frontend/ directory
+const frontendPath = path.resolve(__dirname, '../../frontend');
 if (require('fs').existsSync(path.join(frontendPath, 'index.html'))) {
   app.use(express.static(frontendPath));
 }
