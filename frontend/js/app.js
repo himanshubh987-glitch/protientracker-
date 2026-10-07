@@ -441,26 +441,13 @@ function togglePasswordVisibility(fieldId) {
   if (btn) btn.textContent = isPass ? 'Hide' : 'Show';
 }
 
-function handleAuthSubmit(e, mode) {
+async function handleAuthSubmit(e, mode) {
   e.preventDefault();
   
-  let name = "Alex Vance";
-  let email = "alex@athlete.com";
   const state = getAppState();
-
-  if (mode === 'signup') {
-    name = document.getElementById('signup-name').value.trim() || "Alex Vance";
-    email = document.getElementById('signup-email').value.trim() || "alex@athlete.com";
-    state.profile.objective = selectedGoal;
-  } else {
-    email = document.getElementById('login-email').value.trim() || "alex@athlete.com";
-    name = email.split('@')[0];
-    name = name.charAt(0).toUpperCase() + name.slice(1);
-  }
-
-  // Show authenticating button state
   const submitBtn = mode === 'signup' ? document.getElementById('signup-submit-btn') : document.getElementById('login-submit-btn');
   const originalHtml = submitBtn ? submitBtn.innerHTML : '';
+
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.innerHTML = `
@@ -469,45 +456,102 @@ function handleAuthSubmit(e, mode) {
     `;
   }
 
-  state.user = {
-    name: name,
-    email: email,
-    loggedIn: true,
-    goal: selectedGoal
-  };
-  saveAppState(state);
+  try {
+    let apiUser = null;
+    if (mode === 'signup') {
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      state.profile.objective = selectedGoal;
 
-  setTimeout(() => {
+      if (window.API && window.API.auth) {
+        const res = await window.API.auth.register({
+          name,
+          email,
+          password,
+          goal: selectedGoal,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+        });
+        apiUser = res.user;
+      }
+    } else {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (window.API && window.API.auth) {
+        const res = await window.API.auth.login(email, password);
+        apiUser = res.user;
+      }
+    }
+
+    const finalName = apiUser ? apiUser.name : (mode === 'signup' ? document.getElementById('signup-name').value.trim() : document.getElementById('login-email').value.split('@')[0]);
+    const finalEmail = apiUser ? apiUser.email : (mode === 'signup' ? document.getElementById('signup-email').value.trim() : document.getElementById('login-email').value.trim());
+
+    state.user = {
+      id: apiUser ? apiUser.id : undefined,
+      name: finalName,
+      email: finalEmail,
+      loggedIn: true,
+      goal: apiUser ? apiUser.goal : selectedGoal,
+      daily_protein_target_g: apiUser ? apiUser.daily_protein_target_g : 165
+    };
+    saveAppState(state);
+
     closeAuthModal();
+    showToast(`Welcome, ${finalName}! Bio-cockpit verified.`);
+
+    if (!window.location.pathname.endsWith('dashboard.html')) {
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 600);
+    } else {
+      if (typeof window.initDashboardScreen === 'function') {
+        window.initDashboardScreen();
+      } else if (typeof window.renderDashboard === 'function') {
+        window.renderDashboard();
+      }
+    }
+  } catch (err) {
+    showToast(err.message || 'Authentication failed. Check your credentials.', '✕');
+  } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalHtml;
     }
-
-    showToast(`Welcome, ${name}! Bio-cockpit verified.`);
-
-    // If currently not on dashboard, redirect to dashboard.html
-    if (!window.location.pathname.endsWith('dashboard.html')) {
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 700);
-    } else {
-      // If already on dashboard, trigger re-render
-      if (typeof window.renderDashboard === 'function') {
-        window.renderDashboard();
-      }
-    }
-  }, 600);
+  }
 }
 
-function handleGuestLogin() {
+async function handleGuestLogin() {
   const state = getAppState();
-  state.user = {
-    name: "Alex Vance",
-    email: "alex@athlete.com",
-    loggedIn: true,
-    goal: "bulk"
-  };
+  try {
+    if (window.API && window.API.auth) {
+      const res = await window.API.auth.login('alex@athlete.com', 'Password123!');
+      if (res && res.user) {
+        state.user = {
+          id: res.user.id,
+          name: res.user.name,
+          email: res.user.email,
+          loggedIn: true,
+          goal: res.user.goal || 'bulk',
+          daily_protein_target_g: res.user.daily_protein_target_g || 165
+        };
+      }
+    } else {
+      state.user = {
+        name: "Alex Vance",
+        email: "alex@athlete.com",
+        loggedIn: true,
+        goal: "bulk"
+      };
+    }
+  } catch (e) {
+    state.user = {
+      name: "Alex Vance",
+      email: "alex@athlete.com",
+      loggedIn: true,
+      goal: "bulk"
+    };
+  }
   saveAppState(state);
 
   closeAuthModal();
@@ -518,13 +562,20 @@ function handleGuestLogin() {
       window.location.href = 'dashboard.html';
     }, 600);
   } else {
-    if (typeof window.renderDashboard === 'function') {
+    if (typeof window.initDashboardScreen === 'function') {
+      window.initDashboardScreen();
+    } else if (typeof window.renderDashboard === 'function') {
       window.renderDashboard();
     }
   }
 }
 
-function handleLogout() {
+async function handleLogout() {
+  try {
+    if (window.API && window.API.auth) {
+      await window.API.auth.logout();
+    }
+  } catch (e) {}
   const state = getAppState();
   state.user.loggedIn = false;
   saveAppState(state);
