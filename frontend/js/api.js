@@ -3,25 +3,26 @@
  * Connects frontend screens to Express backend using fetch(..., { credentials: 'include' })
  */
 
-const API_BASE = window.PROTEINTRACK_API_BASE || (
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '8080'
-    ? 'http://localhost:4000/api'
-    : '/api'
-);
+const API_BASE = window.PROTEINTRACK_API_BASE || 'https://web-production-9a5ea8.up.railway.app/api';
+const TOKEN_STORAGE_KEY = 'pt_auth_token';
 
 /**
- * Universal JSON Fetch Helper with credentials: 'include'
+ * Universal JSON Fetch Helper with credentials: 'include' + Bearer fallback
  */
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
+  const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(savedToken ? { 'Authorization': `Bearer ${savedToken}` } : {}),
+    ...(options.headers || {})
+  };
+
   const config = {
     method: options.method || 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    },
-    credentials: 'include', // Sends & receives httpOnly session cookie
-    ...options
+    ...options,
+    headers,
+    credentials: 'include' // Sends & receives httpOnly session cookie
   };
 
   if (config.body && typeof config.body === 'object') {
@@ -35,6 +36,10 @@ async function apiRequest(endpoint, options = {}) {
     if (!res.ok) {
       const err = (data && data.error) ? data.error : { code: 'HTTP_ERROR', message: `Request failed with status ${res.status}` };
       throw err;
+    }
+
+    if (data && data.token) {
+      localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
     }
 
     return data;
@@ -53,7 +58,13 @@ window.API = {
     me: () => apiRequest('/auth/me'),
     login: (email, password) => apiRequest('/auth/login', { method: 'POST', body: { email, password } }),
     register: (userData) => apiRequest('/auth/register', { method: 'POST', body: userData }),
-    logout: () => apiRequest('/auth/logout', { method: 'POST' }),
+    logout: async () => {
+      try {
+        return await apiRequest('/auth/logout', { method: 'POST' });
+      } finally {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+      }
+    },
   },
 
   // Profile

@@ -99,6 +99,7 @@ async function register(req, res, next) {
 
     res.status(201).json({
       message: 'Athlete account registered successfully',
+      token,
       user,
       initial_plan: plan
     });
@@ -137,6 +138,7 @@ async function login(req, res, next) {
 
     res.json({
       message: 'Authenticated successfully',
+      token,
       user
     });
   } catch (err) {
