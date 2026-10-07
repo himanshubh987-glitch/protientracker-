@@ -9,7 +9,7 @@ const router = express.Router();
 const subscribeSchema = {
   body: z.object({
     email: z.string().email('Please enter a valid email address'),
-    source: z.enum(['hero', 'footer', 'cta', 'other']).optional()
+    source: z.enum(['hero', 'footer', 'cta', 'web', 'home_footer', 'other']).optional()
   })
 };
 

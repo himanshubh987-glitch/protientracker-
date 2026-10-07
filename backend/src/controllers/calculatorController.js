@@ -15,8 +15,11 @@ async function calculate(req, res, next) {
       activity_level = 'moderate',
       training_type = 'hypertrophy',
       meals_per_day = 4,
-      save_as_my_target = false
+      save_as_my_target = false,
+      save_as_target = false
     } = req.body;
+
+    const shouldSave = Boolean(save_as_my_target || save_as_target);
 
     const plan = calculateProteinPlan({
       weight_kg,
@@ -29,7 +32,7 @@ async function calculate(req, res, next) {
     let savedToProfile = false;
 
     // Optional save to profile if user is authenticated
-    if (save_as_my_target && req.user) {
+    if (shouldSave && req.user) {
       await db.execute(`
         UPDATE users SET
           daily_protein_target_g = ?,
@@ -59,6 +62,15 @@ async function calculate(req, res, next) {
 
     res.json({
       ...plan,
+      target: {
+        daily_protein_target_g: plan.total_daily_g,
+        g_per_kg: plan.g_per_kg,
+        meals_per_day: plan.meals_per_day,
+        per_meal_protein_g: plan.per_meal_g,
+        leucine_threshold_g: plan.leucine_threshold_g,
+        timing_guidance: plan.meal_split ? plan.meal_split.map(m => `${m.slot}: ${m.protein_g}g`).join(' | ') : '',
+        notes: Array.isArray(plan.notes) ? plan.notes.join(' ') : plan.notes
+      },
       saved_to_profile: savedToProfile
     });
   } catch (err) {

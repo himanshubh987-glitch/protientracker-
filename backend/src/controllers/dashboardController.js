@@ -180,15 +180,36 @@ async function getDashboard(req, res, next) {
       ? Math.round((sum30Protein / daysWithLogsCount) * 10) / 10
       : (consumed > 0 ? consumed : 0);
 
+    const mealsTimelineSimple = {
+      breakfast: mealTimeline.breakfast.items.map(i => ({ ...i, food_name: i.name })),
+      lunch: mealTimeline.lunch.items.map(i => ({ ...i, food_name: i.name })),
+      dinner: mealTimeline.dinner.items.map(i => ({ ...i, food_name: i.name })),
+      snack: mealTimeline.snack.items.map(i => ({ ...i, food_name: i.name }))
+    };
+
     res.json({
       date: targetDate,
       user_name: user.name,
+      user: {
+        id: user.id,
+        name: user.name,
+        daily_protein_target_g: target,
+        meals_per_day: user.meals_per_day || 4
+      },
       target,
       consumed,
       percent,
       remaining,
       calories_consumed: Math.round(foodCalories),
+      today: {
+        target_g: target,
+        consumed_g: consumed,
+        percent,
+        remaining_g: remaining,
+        calories: Math.round(foodCalories)
+      },
       meals: mealTimeline,
+      meals_timeline: mealsTimelineSimple,
       supplements: activeSupplements.map(s => ({
         id: s.id,
         name: s.name,
@@ -197,11 +218,19 @@ async function getDashboard(req, res, next) {
         notes: s.notes,
         protein_g: s.protein_g,
         is_active: Boolean(s.is_active),
-        taken_today: Boolean(s.taken_today)
+        taken_today: Boolean(s.taken_today),
+        logged_today: Boolean(s.taken_today)
       })),
-      last_7_days: last7DaysTotals,
+      last_7_days: last7DaysTotals.map(d => ({
+        ...d,
+        day_label: d.day,
+        total_protein_g: d.grams,
+        hit_goal: d.status === 'complete' || (d.status === 'today' && d.grams >= 0.9 * target)
+      })),
       streak,
-      average_30_day: average30Day
+      streak_days: streak,
+      average_30_day: average30Day,
+      average_30d_protein_g: average30Day
     });
   } catch (err) {
     next(err);

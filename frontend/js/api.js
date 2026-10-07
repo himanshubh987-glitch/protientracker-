@@ -3,7 +3,11 @@
  * Connects frontend screens to Express backend using fetch(..., { credentials: 'include' })
  */
 
-const API_BASE = window.PROTEINTRACK_API_BASE || 'http://localhost:4000/api';
+const API_BASE = window.PROTEINTRACK_API_BASE || (
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '8080'
+    ? 'http://localhost:4000/api'
+    : '/api'
+);
 
 /**
  * Universal JSON Fetch Helper with credentials: 'include'

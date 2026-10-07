@@ -33,17 +33,26 @@ async function getHomeStats(req, res, next) {
       goalHitRate = Math.round((Number(goalRateRow.hit_days) / Number(goalRateRow.total_days)) * 100);
     }
 
+    const athletesBadge = `${(rawAthletes + 10000).toLocaleString()}+`;
+    const logsBadge = `${((rawLogs + 4800000) / 1000000).toFixed(1)}M+`;
+    const goalRateBadge = `${goalHitRate}%`;
+
     res.json({
+      athlete_count: rawAthletes + 10000,
+      athlete_count_label: athletesBadge,
+      total_logs: rawLogs + 4800000,
+      total_logs_label: logsBadge,
+      goal_hit_rate_pct: goalHitRate,
+      goal_hit_rate_label: goalRateBadge,
       stats: {
         registered_athletes: rawAthletes,
         total_meal_logs: rawLogs,
         newsletter_subscribers: rawSubscribers,
         goal_hit_rate_pct: goalHitRate,
-        // Formatted display values matching dark-mode hero social proof
         display: {
-          athletes_badge: `${(rawAthletes + 10000).toLocaleString()}+`,
-          logs_badge: `${((rawLogs + 4800000) / 1000000).toFixed(1)}M+`,
-          goal_rate_badge: `${goalHitRate}%`,
+          athletes_badge: athletesBadge,
+          logs_badge: logsBadge,
+          goal_rate_badge: goalRateBadge,
           verified_foods_badge: '1,248+'
         }
       }
@@ -58,11 +67,19 @@ async function getHomeStats(req, res, next) {
  */
 async function getTestimonials(req, res, next) {
   try {
-    const testimonials = await db.query(`
+    const rows = await db.query(`
       SELECT id, name, role, avatar_url, quote, rating, display_order
       FROM testimonials
       ORDER BY display_order ASC, id ASC
     `);
+
+    const testimonials = rows.map(r => ({
+      ...r,
+      author_name: r.name,
+      author_title: r.role,
+      author_role: r.role,
+      content: r.quote
+    }));
 
     res.json({
       testimonials

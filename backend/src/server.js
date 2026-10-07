@@ -12,9 +12,10 @@ async function startServer() {
     runMigrations();
     await seedDatabase();
 
-    const server = app.listen(config.port, () => {
+    const host = '0.0.0.0';
+    const server = app.listen(config.port, host, () => {
       console.log(`\n======================================================`);
-      console.log(`⚡ ProteinTrack Backend listening on port ${config.port}`);
+      console.log(`⚡ ProteinTrack Server listening on ${host}:${config.port}`);
       console.log(`🌐 Base API URL: http://localhost:${config.port}/api`);
       console.log(`🩺 Health Check: http://localhost:${config.port}/health`);
       console.log(`======================================================\n`);

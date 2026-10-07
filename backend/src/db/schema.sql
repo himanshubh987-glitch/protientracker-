@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
   sex TEXT CHECK(sex IN ('male', 'female', 'other')),
   height_cm REAL,
   weight_kg REAL,
-  activity_level TEXT CHECK(activity_level IN ('sedentary', 'light', 'moderate', 'heavy', 'very_heavy')),
-  training_type TEXT CHECK(training_type IN ('hypertrophy', 'strength', 'endurance', 'general_fitness', 'none')),
+  activity_level TEXT CHECK(activity_level IN ('sedentary', 'light', 'moderate', 'heavy', 'very_heavy', 'very_active')),
+  training_type TEXT CHECK(training_type IN ('hypertrophy', 'strength', 'endurance', 'hybrid', 'general_fitness', 'none', 'heavy', 'moderate', 'light', 'sedentary')),
   goal TEXT CHECK(goal IN ('cut', 'maintain', 'bulk')),
   daily_protein_target_g REAL,
   meals_per_day INTEGER DEFAULT 4,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS food_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   food_id INTEGER REFERENCES foods(id) ON DELETE SET NULL,
-  meal_type TEXT NOT NULL CHECK(meal_type IN ('breakfast', 'lunch', 'dinner', 'snack')),
+  meal_type TEXT NOT NULL CHECK(meal_type IN ('breakfast', 'lunch', 'dinner', 'snack', 'snacks')),
   quantity REAL NOT NULL DEFAULT 1.0,
   protein_g REAL NOT NULL,
   calories REAL NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT UNIQUE NOT NULL,
   subscribed_at TEXT DEFAULT (datetime('now')),
-  source TEXT CHECK(source IN ('hero', 'footer', 'cta', 'other')) DEFAULT 'footer'
+  source TEXT CHECK(source IN ('hero', 'footer', 'cta', 'web', 'home_footer', 'other')) DEFAULT 'footer'
 );
 
 -- 8. Testimonials Table (editable via database without code redeploy)
@@ -106,10 +106,11 @@ CREATE TABLE IF NOT EXISTS faqs (
   display_order INTEGER DEFAULT 0
 );
 
--- Indexes for high-throughput queries and temporal range scans
-CREATE INDEX IF NOT EXISTS idx_food_logs_user_logged ON food_logs(user_id, logged_at);
-CREATE INDEX IF NOT EXISTS idx_supplement_logs_user_taken ON supplement_logs(user_id, taken_at);
+-- ==============================================================================
+-- Performance Indexes
+-- ==============================================================================
+CREATE INDEX IF NOT EXISTS idx_food_logs_user_date ON food_logs(user_id, logged_at);
+CREATE INDEX IF NOT EXISTS idx_supp_logs_user_date ON supplement_logs(user_id, taken_at);
 CREATE INDEX IF NOT EXISTS idx_foods_name ON foods(name);
 CREATE INDEX IF NOT EXISTS idx_foods_category ON foods(category);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-CREATE INDEX IF NOT EXISTS idx_newsletter_email ON newsletter_subscribers(email);

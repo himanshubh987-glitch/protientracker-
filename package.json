@@ -1,17 +1,29 @@
 {
-  "name": "proteintrack-database",
+  "name": "proteintrack-platform",
   "version": "1.0.0",
-  "description": "Production database and data-access layer for ProteinTrack",
-  "main": "db/connection.js",
+  "description": "ProteinTrack Full-Stack Bio-Nutritional Platform & Backend API",
+  "main": "backend/src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "node --watch backend/src/server.js",
     "migrate": "node db/migrate.js",
     "seed": "node db/seeds/seed.js",
     "reset": "node -e \"const fs=require('fs'); ['proteintrack.db', 'proteintrack.db-wal', 'proteintrack.db-shm', 'test.db', 'test.db-wal', 'test.db-shm'].forEach(f => { try { if (fs.existsSync(f)) fs.unlinkSync(f); } catch (e) {} });\" && npm run migrate && npm run seed",
     "test": "node --test tests/database.test.js"
   },
   "dependencies": {
-    "better-sqlite3": "^11.8.1",
     "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.7"
+    "better-sqlite3": "^11.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "zod": "^3.24.2"
   }
 }
