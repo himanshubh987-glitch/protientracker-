@@ -1,0 +1,32 @@
+[
+  {
+    "question": "Why is the baseline daily protein recommendation set to 1.6 g/kg?",
+    "answer": "Meta-analyses across 49 clinical trials (Morton et al., 2018) demonstrate that protein supplementation beyond 1.62 g/kg/day yields plateauing gains in fat-free mass for non-hypocaloric resistance training. We use 1.6 g/kg as our empirical baseline.",
+    "sort_order": 1
+  },
+  {
+    "question": "What is the 'Leucine Trigger' threshold per feeding window?",
+    "answer": "Muscle Protein Synthesis (MPS) via mTORC1 kinase phosphorylation requires reaching an intracellular leucine saturation threshold of approximately 2.5g to 3.0g per meal. Spreading intake evenly across 3–5 meals triggers MPS multiple times daily.",
+    "sort_order": 2
+  },
+  {
+    "question": "Does eating protein during a caloric deficit require a higher target?",
+    "answer": "Yes. During energy deficits ('cuts'), amino acids are partially diverted toward hepatic gluconeogenesis. Systematic reviews (Helms et al., 2014) recommend 2.0–2.4 g/kg or higher to spare lean skeletal muscle tissue.",
+    "sort_order": 3
+  },
+  {
+    "question": "What does 'protein density' mean in the food database?",
+    "answer": "Protein density represents the percentage of total caloric energy derived directly from protein (grams of protein × 4 kcal ÷ total kcal × 100). High density (>70%) allows hitting protein targets without excessive calories.",
+    "sort_order": 4
+  },
+  {
+    "question": "Why are timestamps and day boundaries calculated using client timezones?",
+    "answer": "Athletes live and train across global timezones. Computing 24-hour midnight-to-midnight feeding periods according to your local IANA timezone ensures your streaks and daily progress rings reflect your true biological day.",
+    "sort_order": 5
+  },
+  {
+    "question": "What is snapshot logging and why does ProteinTrack use it?",
+    "answer": "Snapshot logging stores the exact protein and calorie figures calculated at the precise moment you log an intake entry. If a food's recipe or nutritional label is edited or updated in the database months later, your historical telemetry remains clinically accurate.",
+    "sort_order": 6
+  }
+]

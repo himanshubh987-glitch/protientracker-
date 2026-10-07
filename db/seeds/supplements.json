@@ -1,0 +1,13 @@
+[
+  { "name": "Creatine Monohydrate (Creapure)", "type": "ergogenic", "serving_label": "5g powder", "protein_g": 0.0, "notes": "Supports intracellular phosphocreatine resynthesis and ATP output." },
+  { "name": "Whey Protein Isolate (Native 90%)", "type": "protein_powder", "serving_label": "30g scoop", "protein_g": 27.0, "notes": "Rapidly digested whey rich in branched-chain amino acids (3.2g leucine)." },
+  { "name": "Micellar Casein Extended Release", "type": "protein_powder", "serving_label": "33g scoop", "protein_g": 26.0, "notes": "Slow gastric emptying peptide matrix ideal for overnight anti-catabolism." },
+  { "name": "Fermented Essential Amino Acids (EAAs)", "type": "amino_acids", "serving_label": "10g scoop", "protein_g": 8.5, "notes": "Complete essential amino acid profile triggering mTORC1 without digestion load." },
+  { "name": "BCAA 2:1:1 Matrix (Instantized)", "type": "amino_acids", "serving_label": "7g scoop", "protein_g": 6.0, "notes": "L-Leucine, L-Isoleucine, L-Valine formulation for intra-workout oxidation." },
+  { "name": "Organic Pea & Rice Plant Protein Blend", "type": "protein_powder", "serving_label": "35g scoop", "protein_g": 25.0, "notes": "Complementary plant amino acid spectrum with high DIAAS rating." },
+  { "name": "Hydrolyzed Collagen Peptides (Type I & III)", "type": "protein_powder", "serving_label": "20g scoop", "protein_g": 18.0, "notes": "High glycine and proline peptides for joint, tendon, and connective tissue synthesis." },
+  { "name": "L-Glutamine Micronized", "type": "amino_acids", "serving_label": "5g powder", "protein_g": 5.0, "notes": "Intestinal barrier integrity and post-exhaustive immune recovery." },
+  { "name": "Beta-Alanine (CarnoSyn)", "type": "ergogenic", "serving_label": "3.2g powder", "protein_g": 0.0, "notes": "Rate-limiting precursor to intramuscular carnosine buffering H+ ions." },
+  { "name": "Zinc Magnesium Aspartate (ZMA)", "type": "micronutrient", "serving_label": "3 capsules", "protein_g": 0.0, "notes": "Bioavailable zinc, magnesium, and vitamin B6 optimizing nocturnal neuro-endocrine recovery." },
+  { "name": "Omega-3 Triglyceride Fish Oil (EPA/DHA)", "type": "lipid", "serving_label": "2 softgels", "protein_g": 0.0, "notes": "High potency EPA/DHA enhancing muscle protein synthetic sensitivity." }
+]

@@ -1,0 +1,61 @@
+{
+  "project": {
+    "title": "ProteinTrack Web Platform Design",
+    "id": "18006381912984570538",
+    "resourceName": "projects/18006381912984570538"
+  },
+  "screens": [
+    {
+      "id": "edb36da5593042c4b2653ab82dd8b4cb",
+      "index": 1,
+      "name": "landing",
+      "title": "Home Landing Page",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "7410",
+      "screenshotUrl": "https://lh3.googleusercontent.com/aida/AEtjO1U0wkEj4_lcPb9XwS-124oDsPx8XR6KTSfzEuiKAegoON7drf2XfPU-Xs22Bqihd5uhIQIzSyY0mvJtgoEmTns0BY3dC_wjYi_EFOzplxgnEQzqvx5sReNimijjnK4M6iim-8hQXAlbhygJTfU3iGoY1uuEbDo1GbjdT48tY6Ny36IW6pKl8mDse0UXd7gjt2Q-Iy8OACl6Gi7EfMwWNRWDhe8ywkAj6W3ekE783BpqK_3TBtV1jyi9Rvw",
+      "htmlDownloadUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJyEgxzdGl0Y2hfZmlsZXMaYgosc3RpdGNoX2h0bWxfMDAwNjVkMmQ3MDg1OWM0ZTAzNmM0YWVlMjAyYzczYjUSCxIHEKHDwNfXBRgBkgEkCgpwcm9qZWN0X2lkEhZCFDE4MDA2MzgxOTEyOTg0NTcwNTM4&filename=&opi=89354086",
+      "localScreenshot": "stitch_screens/images/edb36da5593042c4b2653ab82dd8b4cb.png",
+      "localPage": "index.html"
+    },
+    {
+      "id": "256eda4f3d3d46e0bd73b3e85348ce94",
+      "index": 2,
+      "name": "calculator",
+      "title": "Protein Calculator & Target Plan",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "6256",
+      "screenshotUrl": "https://lh3.googleusercontent.com/aida/AEtjO1UxzrosovhVLmG1EzGYT8Z1IPCMgzhnhShdVGqrElu9izNJhg6spslJak74NrwcDjzi9NaP8NLYdGagzL0PXjT8K1WRxiMXfsCifHjNas7Ig38g02l5YEC39LkSO-lZSIICzKM5N0BnuJg1HGBHi98joggZCZsoevy8jlY_g5mZgUiifwM87FFkmpcVmsfeCOxtizK8Qj2qOKEoz6GPcOIS5thEDa2FKJ8c6MpSNidd5Sxd1910wSuTzk65",
+      "htmlDownloadUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJyEgxzdGl0Y2hfZmlsZXMaYgosc3RpdGNoX2h0bWxfMDAwNjVkMmQ3MDc3ZTg3NjAzMzg1NzMxMzcwMTk5ZTQSCxIHEKHDwNfXBRgBkgEkCgpwcm9qZWN0X2lkEhZCFDE4MDA2MzgxOTEyOTg0NTcwNTM4&filename=&opi=89354086",
+      "localScreenshot": "stitch_screens/images/256eda4f3d3d46e0bd73b3e85348ce94.png",
+      "localPage": "calculator.html"
+    },
+    {
+      "id": "3ad9a660a5dc4b42a9fd4f04e3f4a757",
+      "index": 3,
+      "name": "food_database",
+      "title": "Foods Protein Database",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "4546",
+      "screenshotUrl": "https://lh3.googleusercontent.com/aida/AEtjO1XCdjMQrfC-PNAOg1hG2DKEuM8YIAkStkyEcKlgSEffEv4GljfAd6JkZ5jq4_s0hsURaSgUqKuE5hIK-opnnMTu4gTllGgKPuzeVstL9YB8y476b23i2rAJPY4DokY1b3xZbrfLzJJrvszGXJf7eNvvYoLJfznYBk6Bc9E7jpVLMNAOax2JhxgZLyIk2uAZShF4gCFa7mgOmlEnK7ia9h08qYcwfNiz0hrD7gQ7grrqOM0pTEEw5f53mJkK",
+      "htmlDownloadUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJyEgxzdGl0Y2hfZmlsZXMaYgosc3RpdGNoX2h0bWxfMDAwNjVkMmQ3MDljOWZlNDA1MDNjMWYxNzAxNTY2YmUSCxIHEKHDwNfXBRgBkgEkCgpwcm9qZWN0X2lkEhZCFDE4MDA2MzgxOTEyOTg0NTcwNTM4&filename=&opi=89354086",
+      "localScreenshot": "stitch_screens/images/3ad9a660a5dc4b42a9fd4f04e3f4a757.png",
+      "localPage": "foods.html"
+    },
+    {
+      "id": "53a58aab10f44133bf5f81065dd6de51",
+      "index": 4,
+      "name": "dashboard",
+      "title": "Dashboard (Logged-In View)",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "5174",
+      "screenshotUrl": "https://lh3.googleusercontent.com/aida/AEtjO1Wm7-ADSqsNZyRPFpq29d-XUgTAWFPmo4OV4OrE7zLgETBqVwY8Pl_BR3302yeppMpVM1-h-FqxIIu-eHtMH4RKaNs4USIAfojOu_Oc39QDkwmFzNaydHD8jr_SifTyH1GXMj1c6aCfrj2soAHM_R9dZHQg4yF4BUdG2YepIONHs40kMtU0Ot2h6T6XIvlXf_0ZgICPi6fcNT8iFjqSiVNNplJu61828w3KTOeRwlMdWJfEt1tGv1HYIt3Y",
+      "htmlDownloadUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJyEgxzdGl0Y2hfZmlsZXMaYgosc3RpdGNoX2h0bWxfMDAwNjVkMmQ3MTc2MjNhYTA3YzRjZjVhYmYyNmMyY2ISCxIHEKHDwNfXBRgBkgEkCgpwcm9qZWN0X2lkEhZCFDE4MDA2MzgxOTEyOTg0NTcwNTM4&filename=&opi=89354086",
+      "localScreenshot": "stitch_screens/images/53a58aab10f44133bf5f81065dd6de51.png",
+      "localPage": "dashboard.html"
+    }
+  ]
+}

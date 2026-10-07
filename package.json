@@ -1,0 +1,17 @@
+{
+  "name": "proteintrack-database",
+  "version": "1.0.0",
+  "description": "Production database and data-access layer for ProteinTrack",
+  "main": "db/connection.js",
+  "scripts": {
+    "migrate": "node db/migrate.js",
+    "seed": "node db/seeds/seed.js",
+    "reset": "node -e \"const fs=require('fs'); ['proteintrack.db', 'proteintrack.db-wal', 'proteintrack.db-shm', 'test.db', 'test.db-wal', 'test.db-shm'].forEach(f => { try { if (fs.existsSync(f)) fs.unlinkSync(f); } catch (e) {} });\" && npm run migrate && npm run seed",
+    "test": "node --test tests/database.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7"
+  }
+}

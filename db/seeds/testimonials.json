@@ -1,0 +1,37 @@
+[
+  {
+    "author_name": "Dr. Marcus Vance",
+    "author_role": "Sports Physiologist & Elite Strength Coach",
+    "quote": "ProteinTrack is the only telemetry platform that treats leucine thresholds and amino acid distribution as primary variables instead of arbitrary total calorie targets.",
+    "rating": 5,
+    "is_featured": 1
+  },
+  {
+    "author_name": "Elena Rostova",
+    "author_role": "Olympic Weightlifter (-59kg)",
+    "quote": "The portion sizing and snapshot logging keep my macro history pristine across microcycles. I've maintained 155g daily protein through 14 weeks of competitive cut without lean mass loss.",
+    "rating": 5,
+    "is_featured": 1
+  },
+  {
+    "author_name": "David Thorne",
+    "author_role": "Hyrox Competitor & Endurance Athlete",
+    "quote": "Most trackers push 0.8g/kg. ProteinTrack calibrated me to 2.1g/kg based on my hybrid volume, and my chronic soreness vanished in ten days.",
+    "rating": 5,
+    "is_featured": 1
+  },
+  {
+    "author_name": "Samantha Wu",
+    "author_role": "Competitive Natural Bodybuilder",
+    "quote": "The 4-window feeding distribution and supplement toggles eliminate mental fatigue during prep. Clean, dark-mode cockpit with zero fluff.",
+    "rating": 5,
+    "is_featured": 1
+  },
+  {
+    "author_name": "Liam Gallagher",
+    "author_role": "Collegiate Rowing Coach",
+    "quote": "Our entire squad logs their protein density on ProteinTrack. The streak tracking and evidence-based calculations set a clinical standard.",
+    "rating": 5,
+    "is_featured": 1
+  }
+]
